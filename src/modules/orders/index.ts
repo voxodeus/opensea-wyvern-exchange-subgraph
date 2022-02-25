@@ -65,7 +65,7 @@ export namespace orders {
 	}
 	export namespace helpers {
 
-		export function getFeeMethod(feeMethod: i32): string {
+		export function getFeeMethod(feeMethod: i32): string | null {
 			let key = shared.helpers.i32ToString(feeMethod)
 			log.info("getFeeMethod said: {}", [key])
 			return shared.helpers.getPropById(key, constants.getFeeTypes())
@@ -73,19 +73,19 @@ export namespace orders {
 
 
 
-		export function getSaleKind(kind: i32): string {
+		export function getSaleKind(kind: i32): string | null {
 			let key = shared.helpers.i32ToString(kind)
 			log.info("getSaleKind said: {}", [key])
 			return shared.helpers.getPropById(key, constants.getSaleKinds())
 		}
 
-		export function getHowToCall(call: i32): string {
+		export function getHowToCall(call: i32): string | null {
 			let callAsString = shared.helpers.i32ToString(call)
 			log.info("getHowToCall said: {}", [callAsString])
 			return shared.helpers.getPropById(callAsString, constants.getOrderCalls())
 		}
 
-		export function getOrderSide(side: i32): string {
+		export function getOrderSide(side: i32): string | null {
 			let sideAsString = shared.helpers.i32ToString(side)
 			log.info("getOrderSide said: {}", [sideAsString])
 			return shared.helpers.getPropById(sideAsString, constants.getOrderSides())

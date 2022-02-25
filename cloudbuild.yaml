@@ -1,0 +1,38 @@
+steps:
+  - id: "docker_build"
+    name: "gcr.io/cloud-builders/docker"
+    args: [ "build", "-t", "us.gcr.io/$PROJECT_ID/okg-subgraph", "." ]
+
+  - id: "docker_push"
+    name: "gcr.io/cloud-builders/docker"
+    args: [ "push", "us.gcr.io/$PROJECT_ID/okg-subgraph" ]
+
+  - id: "cloud_run_deploy_to_staging"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "bash"
+    args:
+    - '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "main" ]]; then
+          gcloud run deploy okg-subgraph-$BRANCH_NAME \
+            --image=us.gcr.io/$PROJECT_ID/okg-subgraph:latest \
+            --cpu=1 \
+            --port=8080 \
+            --memory=1024Mi \
+            --timeout=900 \
+            --platform=managed \
+            --max-instances=1 \
+            --min-instances=1 \
+            --no-cpu-throttling \
+            --region=us-central1 \
+            --allow-unauthenticated \
+            --revision-suffix=$SHORT_SHA \
+            --service-account=cypher-metadata-api@cypherverse.iam.gserviceaccount.com \
+            --set-env-vars=PROJECT_ID=$PROJECT_ID,SHORT_SHA=$SHORT_SHA,NODE_URL=${_NODE_URL}
+      else
+        echo fail
+      fi
+
+serviceAccount: "cypher-metadata-api@cypherverse.iam.gserviceaccount.com"
+options:
+  logging: CLOUD_LOGGING_ONLY

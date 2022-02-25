@@ -1,4 +1,4 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
 repository: https://github.com/protofire/opensea-wyvern-exchange-subgraph
 description: This subgraph aims to be index the opensea exchange contract, including time series entities, erc transactions and ntf contracts address
 
@@ -11,10 +11,10 @@ dataSources:
     source:
       address: "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"
       abi: openseaWyvernExchange
-      startBlock: 5774644
+      startBlock: 12219560
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Account

@@ -168,9 +168,9 @@ export function handleOrdersMatched(event: OrdersMatched): void {
     // TODO: err entity
     return
   }
-  let asset = assets.loadAsset(order.target)
+  let asset = assets.loadAsset(order.target!)
   if (asset == null) {
-    log.warning("missing asset for target: {}", [order.target])
+    log.warning("missing asset for target: {}", [order.target!])
     return
   }
 
@@ -179,28 +179,28 @@ export function handleOrdersMatched(event: OrdersMatched): void {
 
 
   let totalTakerAmount = shared.helpers.calcTotalTakerAmount(order)
-  let takerBalance = balances.increaseBalanceAmount(order.taker, order.paymentToken, totalTakerAmount)
+  let takerBalance = balances.increaseBalanceAmount(order.taker!, order.paymentToken!, totalTakerAmount)
   takerBalance.save()
 
   let totalMakerAmount = shared.helpers.calcTotalMakerAmount(order)
-  let makerBalance = balances.decreaseBalanceAmount(order.maker, order.paymentToken, totalMakerAmount)
+  let makerBalance = balances.decreaseBalanceAmount(order.maker!, order.paymentToken!, totalMakerAmount)
   makerBalance.save()
 
-  let minuteVolume = volumes.minute.increaseVolume(asset.id, order.paymentToken, minute.id, minuteEpoch, totalTakerAmount)
+  let minuteVolume = volumes.minute.increaseVolume(asset.id, order.paymentToken!, minute.id, minuteEpoch, totalTakerAmount)
   minuteVolume.save()
 
-  let hourVolume = volumes.hour.increaseVolume(asset.id, order.paymentToken, hour.id, hourEpoch, totalTakerAmount)
+  let hourVolume = volumes.hour.increaseVolume(asset.id, order.paymentToken!, hour.id, hourEpoch, totalTakerAmount)
   hourVolume.save()
 
-  let dayVolume = volumes.day.increaseVolume(asset.id, order.paymentToken, day.id, dayEpoch, totalTakerAmount)
+  let dayVolume = volumes.day.increaseVolume(asset.id, order.paymentToken!, day.id, dayEpoch, totalTakerAmount)
   dayVolume.save()
 
-  let weekVolume = volumes.week.increaseVolume(asset.id, order.paymentToken, week.id, weekEpoch, totalTakerAmount)
+  let weekVolume = volumes.week.increaseVolume(asset.id, order.paymentToken!, week.id, weekEpoch, totalTakerAmount)
   weekVolume.save()
 
   let erc20tx = events.getOrCreateErc20Transaction(
     timestamp,
-    order.paymentToken,
+    order.paymentToken!,
     maker.id,
     owner.id,
     totalTakerAmount

@@ -11,7 +11,7 @@ export let SECONDS_IN_WEEK = SECONDS_IN_DAY * 7
 export namespace shared {
 	export namespace helpers {
 
-		export function getPropById(key: string, map: TypedMap<string, string>): string {
+		export function getPropById(key: string, map: TypedMap<string, string>): string | null {
 			let val = map.get(key) as string | null
 			log.info('@@@ getPropById ::: {} : {} ', [
 				"Finding prop for key", key
@@ -36,7 +36,7 @@ export namespace shared {
 			block.save()
 
 			let transaction = transactions.getOrCreateTransactionMeta(
-				txHash.toHexString(),
+				// txHash.toHexString(),
 				blockId,
 				txHash,
 				event.transaction.from,
@@ -57,8 +57,8 @@ export namespace shared {
 		}
 
 		export function getSafeNumber(val: BigInt | null): BigInt {
-			let number = val
-			if (number == null) {
+			let number: BigInt | null = val ? val : null
+			if (!number) {
 				number = integer.ZERO
 			}
 			return number as BigInt
